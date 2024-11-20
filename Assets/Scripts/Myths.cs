@@ -1,12 +1,18 @@
 using UnityEngine;
 using TMPro;
-using System.IO;
 
 public class Myths : MonoBehaviour
 {
     public GameObject mythDialog; // Panel del cuadro de diálogo
     public TextMeshProUGUI mythText; // Texto dentro del cuadro de diálogo
-    private string[] myths; // Lista de mitos sobre tiburones
+    private string[] myths = new string[] // Arreglo con los mitos sobre tiburones
+    {
+        "Mito 1: Los tiburones atacan a los humanos de forma frecuente. \nFalso: No buscan atacar a los humanos, y en realidad, las personas son mucho más peligrosas para los tiburones que al revés.",
+        "Mito 2: Los tiburones atacan a los humanos constantemente. \nFalso: Hay más de 500 especies de tiburones, y solo unas pocas son grandes y potencialmente peligrosas.",
+        "Mito 3: Los tiburones son ciegos. \nFalso: Su visión está adaptada para detectar movimientos y formas en condiciones de poca luz, lo cual les ayuda a localizar presas en las profundidades del océano. ",
+        "Mito 4: Los tiburones pueden oler sangre a kilómetros de distancia. \nFalso: Pueden detectar olores a niveles de partes por millón y solo en distancias relativamente cortas, especialmente si la sangre está diluida en el agua.",
+        "Mito 5: Los tiburones son animales malvados. \nFalso: Los tiburones juegan un papel crucial en los ecosistemas marinos al mantener el equilibrio de las poblaciones de otras especies."
+    };
     private int activeMythIndex = 0; // Índice del mito activo
 
     // Método para mostrar/ocultar el cuadro de diálogo
@@ -30,28 +36,6 @@ public class Myths : MonoBehaviour
         }
     }
 
-    // Método para cargar los mitos desde un archivo JSON
-    void LoadMyths()
-    {
-        // Verifica si el archivo existe en la ruta correcta
-        string filePath = "Assets/Scripts/myths.json"; // Ruta del archivo JSON con los mitos
-        if (File.Exists(filePath))
-        {
-            string jsonData = File.ReadAllText(filePath); // Leer el contenido del archivo JSON
-            MythData mythData = JsonUtility.FromJson<MythData>(jsonData); // Convertir el JSON en un objeto
-            myths = mythData.myths; // Asignar los mitos al arreglo
-
-            if (myths.Length == 0)
-            {
-                Debug.LogError("No myths found in the JSON file.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Shark myths file not found."); // Si no se encuentra el archivo, mostrar error
-        }
-    }
-
     // Método para cambiar al siguiente mito (solo se ejecuta cuando el cuadro se activa)
     public void NextMyth()
     {
@@ -70,8 +54,6 @@ public class Myths : MonoBehaviour
                 mythText.text = myths[activeMythIndex]; // Muestra el siguiente mito                           
                 activeMythIndex++; // Incrementa el índice del mito actual
             }
-
-            
         }
         else
         {
@@ -79,16 +61,13 @@ public class Myths : MonoBehaviour
         }
     }
 
-    // Clase para mapear los datos del JSON
-    [System.Serializable]
-    public class MythData
-    {
-        public string[] myths; // Arreglo de mitos que se leerán del archivo JSON
-    }
-
     // Start se llama antes de la primera actualización
     void Start()
     {
-        LoadMyths(); // Cargar los mitos al inicio
+        // No es necesario cargar mitos desde un archivo JSON, ya que ya están definidos en el arreglo
+        if (myths.Length == 0)
+        {
+            Debug.LogError("No myths available in the myths array.");
+        }
     }
 }

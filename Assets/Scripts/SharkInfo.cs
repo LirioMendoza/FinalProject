@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.IO;
 
 [System.Serializable]
 public class SharkInfoJSON
@@ -9,20 +8,14 @@ public class SharkInfoJSON
     public string[] info; // Información del tiburón
 }
 
-[System.Serializable]
-public class SharkData
-{
-    public SharkInfoJSON[] sharks; // Lista de tiburones
-}
-
 public class SharkInfo : MonoBehaviour
 {
     public GameObject infoDialog; // Panel del cuadro de diálogo
     public TextMeshProUGUI infoText; // Texto dentro del cuadro de diálogo
 
-    public SharkInfoJSON[] sharks; // Lista de tiburones cargados desde el JSON
+    public SharkInfoJSON[] sharks; // Lista de tiburones cargados desde un arreglo en el código
     private int activeInfoIndex = 0; // Índice del dato activo
-    private int currentSharkIndex = 0; // Índice de la especie activa (0: martillo, 1: blanco, 2: tigre)
+    private int currentSharkIndex = 0; // Índice de la especie activa 
 
     // Métodos para mostrar/ocultar el cuadro de diálogo
     public void ToggleDialog()
@@ -91,8 +84,6 @@ public class SharkInfo : MonoBehaviour
         }
     }
 
-
-
     // Método para actualizar el tiburón activo (se llamará desde ModelChange)
     public void SetActiveShark(int sharkIndex)
     {
@@ -107,37 +98,57 @@ public class SharkInfo : MonoBehaviour
     // Start se llama antes de la primera actualización
     void Start()
     {
-        LoadSharkData(); // Cargar datos de los tiburones desde el JSON
+        // Cargar los datos predefinidos de los tiburones
+        sharks = new SharkInfoJSON[]
+        {
+            new SharkInfoJSON
+            {
+                name = "Tiburón Martillo",
+                info = new string[]
+                {
+                    "Nombre científico: Sphyrnidae.",
+                    "Esperanza de vida media en estado salvaje: de 20 a 30 años.",
+                    "Tamaño: entre 4 y 6 metros.",
+                    "Peso: entre 230 y 450 kilos.",
+                    "¿Sabías que...? El tiburón martillo también cuenta con un grupo " +
+                    "de órganos sensoriales llamados “ámpulas de Lorenzini”, gracias a los " +
+                    "cuales puede detectar los campos eléctricos creados por sus presas."
+                }
+            },
+            new SharkInfoJSON
+            {
+                name = "Tiburón Ballena",
+                info = new string[]
+                {
+                    "Nombre científico: Rhincodon typus.",
+                    "Tamaño: Hasta 20 metros de largo.",
+                    "Peso: Más de 20 toneladas.",
+                    "¿Sabías que...? Las observaciones de científicos y conservacionistas han determinado " +
+                    "que cada individuo tiene un patrón único de manchas, tal como una huella dactilar humana.",
+                    "Tristemente, en el 2000 fue declarada especie vulnerable en la Lista Roja de la " +
+                    "Unión Internacional para la Conservación de la Naturaleza (UICN)."
+                }
+            },
+            new SharkInfoJSON
+            {
+                name = "Tiburón Blanco",
+                info = new string[]
+                {
+                    "Nombre científico: Carcharodon carcharias",
+                    "Tamaño: entre 5 y 5.8 metros.",
+                    "Reproducción: Es una especie ovovivípara.",
+                    "¿Sabías que...? Los tiburones blancos deben su nombre a su vientre blanco, pero su " +
+                    "parte superior puede ser marrón o gris.",
+                    "¿Sabías que...? Los tiburones blancos pueden desplazarse por el agua a velocidades " +
+                    "cercanas a los 50 kilómetros por hora."
+                }
+            }
+        };
 
         // Inicia el cuadro de información desactivado
         if (infoDialog != null)
         {
             infoDialog.SetActive(false);
-        }
-    }
-
-    // Método para cargar los datos del JSON
-    void LoadSharkData()
-    {
-        string filePath = "Assets/Scripts/sharkData.json"; // Ruta del archivo JSON
-
-        if (File.Exists(filePath))
-        {
-            string jsonData = File.ReadAllText(filePath); // Leer el archivo JSON
-            SharkData sharkData = JsonUtility.FromJson<SharkData>(jsonData); // Deserializar el JSON
-            if (sharkData != null)
-            {
-                sharks = sharkData.sharks; // Asignar los tiburones cargados desde el JSON
-                Debug.Log("Shark data loaded successfully.");
-            }
-            else
-            {
-                Debug.LogError("Error: Failed to deserialize JSON data.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Error: Shark data file not found.");
         }
     }
 }
